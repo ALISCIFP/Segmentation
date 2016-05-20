@@ -8,11 +8,9 @@ Created on Thu Apr 21 22:34:45 2016
 from __future__ import print_function
 
 import os  
-import redis
 import re
 import numpy as np
 from PIL import Image
-from matplotlib import pyplot
 import h5py
 
 fold1Path = "./medical_data/fold1/"
@@ -21,11 +19,6 @@ patternBracket1 = '\[(.+)\]'
 patternBracket2 = '\{(.+)\}'
 
 labelDef = {"background" : 0, "left clavicle": 1, "left lung": 2, "heart": 3, "right clavicle": 4, "right lung": 5}
-
-def initializeReids():
-     r = redis.Redis(host='localhost', port=6379, db=0) 
-     
-     return r
 
 def loadData_Landmarks(isTraining):
     global labelDef
@@ -38,8 +31,6 @@ def loadData_Landmarks(isTraining):
     labelPerPicture = []
     filenames = []
     for filename in os.listdir(currPath):
-#        labelPerPicture = {}
-        
         with open(currPath + filename, 'r') as file:
             label = 0
             for line in file:
@@ -60,15 +51,12 @@ def loadData_Landmarks(isTraining):
                     x = float(pair[0]) - 1
                     y = float(pair[1]) - 1
                     
-#                    labelPerPicture[tuple((x, y))] = label
                     temp = []
                     temp.append(x)
                     temp.append(y)
                     temp.append(label)
                     labelPerPicture.append(temp)
         
-#        labels[filename.split(".")[0]] = labelPerPicture
-#        labels[filename.split(".")[0] + '.jpg'] = np.array(labelPerPicture)
         filenames.append(filename.split(".")[0] + '.jpg')
     
     if(isTraining):
@@ -96,10 +84,6 @@ def loadData_Landmarks(isTraining):
         
     print(test1[0])
     print(test2[0])
-#    for filename, fileLabel in labels.items():
-#        with open(filename, "w") as file:
-#            for coor, label in fileLabel.items():
-#                file.write(str(coor[0]) + " " + str(coor[1]) + " " + str(label) + "\n")
     
     return labels
 
@@ -146,7 +130,6 @@ def loadData_Points(isTraining):
     
     return allFileFeatures
 
-# whats the format of images?
 def loadData_Images(isTraining):
     if(isTraining):
         currPath = fold1Path + 'masks/'
@@ -173,31 +156,3 @@ def loadData_Images(isTraining):
     return images
 
 temp1 = loadData_Landmarks(True)
-#temp2 = loadData_Points(True)
-#temp3 = loadData_Images(True)
-
-# reference: http://stackoverflow.com/questions/7368739/numpy-and-16-bit-pgm
-def read_pgm(filename, byteorder='>'):
-    with open(filename, 'rb') as f:
-        buffer = f.read()
-    try:
-        header, width, height, maxval = re.search(
-            b"(^P5\s(?:\s*#.*[\r\n])*"
-            b"(\d+)\s(?:\s*#.*[\r\n])*"
-            b"(\d+)\s(?:\s*#.*[\r\n])*"
-            b"(\d+)\s(?:\s*#.*[\r\n]\s)*)", buffer).groups()
-    except AttributeError:
-        raise ValueError("Not a raw PGM file: '%s'" % filename)
-    return np.frombuffer(buffer,
-                            dtype='u1' if int(maxval) < 256 else byteorder+'u2',
-                            count=int(width)*int(height),
-                            offset=len(header)
-                            ).reshape((int(height), int(width)))
-
-def checkPlot(): 
-    image = read_pgm("0000_02176.pgm", byteorder='<')
-    image = read_pgm("0000_0_0_0_15_0_1.pgm", byteorder='<')
-    pyplot.imshow(image, pyplot.cm.gray)
-    pyplot.show()
-
-#checkPlot()
