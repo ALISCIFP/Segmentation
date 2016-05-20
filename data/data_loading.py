@@ -13,8 +13,8 @@ import numpy as np
 from PIL import Image
 import h5py
 
-fold1Path = "./medical_data/fold1/"
-fold2Path = "./medical_data/fold2/"
+fold1Path = "./Raw Data/fold1/"
+fold2Path = "./Raw Data/fold2/"
 patternBracket1 = '\[(.+)\]'
 patternBracket2 = '\{(.+)\}'
 
@@ -31,6 +31,8 @@ def loadData_Landmarks(isTraining):
     labelPerPicture = []
     filenames = []
     for filename in os.listdir(currPath):
+        CoordLabelPerPicture = {}        
+        
         with open(currPath + filename, 'r') as file:
             label = 0
             for line in file:
@@ -56,14 +58,16 @@ def loadData_Landmarks(isTraining):
                     temp.append(y)
                     temp.append(label)
                     labelPerPicture.append(temp)
+                    CoordLabelPerPicture[tuple((x, y))] = label
         
         filenames.append(filename.split(".")[0] + '.jpg')
+        labels[filename.split(".")[0] + '.txt'] = CoordLabelPerPicture
     
     if(isTraining):
-        os.chdir("./Medical Image Labels/train")
+        os.chdir("./Caffe Input/train")
         name = 'train'
     else:
-        os.chdir("./Medical Image Labels/test")
+        os.chdir("./Caffe Input/test")
         name = 'test'
     
     print(len(filenames))
@@ -77,13 +81,26 @@ def loadData_Landmarks(isTraining):
     
     with open(name + '_data.txt', 'w') as file:
         file.write('src/caffe/test/test_data/test.h5\n')
-    
-    with h5py.File(name + '.h5', 'r') as file:
-        test1 = file['data'].value
-        test2 = file['label'].value
+
+#    to test hdf5 correctness    
+#    with h5py.File(name + '.h5', 'r') as file:
+#        test1 = file['data'].value
+#        test2 = file['label'].value
         
-    print(test1[0])
-    print(test2[0])
+#    print(test1[0])
+#    print(test2[0])
+    
+    if(isTraining):
+        os.chdir("../../Extracted Landmarks/train")
+        name = 'train'
+    else:
+        os.chdir("../../Extracted Landmarks/test")
+        name = 'test'
+    
+    for filename, fileLabel in labels.items():
+        with open(filename, "w") as file:
+            for coor, label in fileLabel.items():
+                file.write(str(coor[0]) + " " + str(coor[1]) + " " + str(label) + "\n")
     
     return labels
 
