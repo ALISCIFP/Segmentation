@@ -10,9 +10,17 @@ from numpy.core.umath_tests import matrix_multiply
 from numpy.linalg import svd
 from sklearn.decomposition import PCA
 import random
+import sys
+import os
+print(os.getcwd())
+sys.path.insert(0, '../data/')
 
-f = np.array([[[0, 1, 2], [10, 11, 12]], [[3, 4, 5], [6, 7, 8]]], dtype = np.float)
-def procrustes2d(f):
+from data_loading import loadTrainingLandmarks, loadTestingLandmarks
+
+#f = np.array([[[0, 1, 2], [10, 11, 12]], [[3, 4, 5], [6, 7, 8]]], dtype = np.float)
+
+def procrustes2d(origin):
+    f = np.copy(origin)
     numberOfShapes = np.shape(f)[0]  
     diff = np.inf   
     timesToConverge = 0
@@ -21,11 +29,11 @@ def procrustes2d(f):
     
         # zero mean normalize input aray
         mean = np.mean(np.mean(f, axis = 0), axis = 1).reshape(2, 1)
-        print(mean)
-        print(np.shape(mean))
+#        print(mean)
+#        print(np.shape(mean))
         #f = (f.T - mean).T
         f = f - mean
-        print(f)
+#        print(f)
     
         #pick radom element as pivot
         #scale pivot element to 1
@@ -34,9 +42,9 @@ def procrustes2d(f):
 #        print(pivot)
 #        print(np.shape(pivot))
         scale = np.sqrt(np.sum(np.power(pivot-mean, 2))/np.shape(pivot)[1])
-        print("scale", scale)
+#        print("scale", scale)
         pivot = (pivot-mean)/scale
-        print(pivot)
+#        print(pivot)
         f[index] = pivot
 #        scale1 = np.sqrt(np.sum(np.power(pivot, 2))/np.shape(pivot)[1])
 #        print(scale1)
@@ -54,14 +62,12 @@ def procrustes2d(f):
         top1 = np.sum(top, axis = 1)
 #        print(top1)
         theta = np.arctan2(top1, bot1)
-        print(theta)
+#        print(theta)
 
         sine = np.sin(theta)
-        print('sine:')
-        print(sine)
+#        print('sine:', sine)
         cosine = np.cos(theta)
-        print('cosine:')
-        print(cosine)
+#        print('cosine:', cosine)
         transformMatrix = np.zeros((np.shape(f)[0] , 4))
 
         #build transfor matrix
@@ -69,22 +75,27 @@ def procrustes2d(f):
         transformMatrix[:, 1] = -sine
         transformMatrix[:, 2] = sine
         transformMatrix[:, 3] = cosine
-        print("before reshape", transformMatrix)
+#        print("before reshape", transformMatrix)
         transformMatrix = transformMatrix.reshape(np.shape(f)[0], 2, 2)
-        print("after reshape", transformMatrix)
+#        print("after reshape", transformMatrix)
 
         update = matrix_multiply(transformMatrix, f)
-        print(update[index] == pivot)
-        print("update:", update)
+#        print(update[index] == pivot)
+#        print("update:", update)
 
         diff = np.sqrt(np.sum(np.square(f-update)))
         f = update
-        print(diff)
+#        print(diff)
     
     print(timesToConverge)
-procrustes2d(f)
+    return f
+#procrustes2d(f)
 
-f = np.array([[[0, 1, 2], [10, 11, 12], [0, 1, 2]], [[3, 4, 5], [6, 7, 8], [0, 1, 2]]], dtype = np.float)
+temp = loadTrainingLandmarks()
+for key, value in temp.items():
+    value = procrustes2d(np.array(value))
+
+#f = np.array([[[0, 1, 2], [10, 11, 12], [0, 1, 2]], [[3, 4, 5], [6, 7, 8], [0, 1, 2]]], dtype = np.float)
 def procrustes3d(f):
     numberOfShapes = np.shape(f)[0]    
     timesToConverge = 0

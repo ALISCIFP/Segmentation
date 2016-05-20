@@ -15,6 +15,8 @@ import h5py
 
 fold1Path = "./Raw Data/fold1/"
 fold2Path = "./Raw Data/fold2/"
+TRAINING_LANDMARKS_PATH = ""
+
 patternBracket1 = '\[(.+)\]'
 patternBracket2 = '\{(.+)\}'
 
@@ -172,4 +174,58 @@ def loadData_Images(isTraining):
         
     return images
 
-temp1 = loadData_Landmarks(True)
+def loadCategorizedLandmarks(isTraining):
+    print(os.getcwd())
+    if(isTraining):
+        os.chdir("../data/Extracted Landmarks/train")
+    else:
+        os.chdir("../data/Extracted Landmarks/test")
+    
+    categorizedLandmarks = {}
+    categorizedLandmarks[1] = []
+    categorizedLandmarks[2] = []
+    categorizedLandmarks[3] = []
+    categorizedLandmarks[4] = []
+    categorizedLandmarks[5] = []
+    for filename in os.listdir(os.getcwd()):
+        with open(os.getcwd() + '/' + filename, 'r') as file:
+            categorizedLandmarksPerFile = {}
+            categorizedLandmarksPerFile[1] = []
+            categorizedLandmarksPerFile[2] = []
+            categorizedLandmarksPerFile[3] = []
+            categorizedLandmarksPerFile[4] = []
+            categorizedLandmarksPerFile[5] = []
+
+            for key, value in categorizedLandmarksPerFile.items():
+                value.append([])
+                value.append([])
+            
+            for line in file:
+                line = line.split()
+                
+                categorizedLandmarksPerFile[int(line[-1])][0].append(float(line[0]))
+                categorizedLandmarksPerFile[int(line[-1])][1].append(float(line[1]))
+            
+            for key, value in categorizedLandmarksPerFile.items():            
+                categorizedLandmarks[key].append(value) 
+    
+    # sanity check to make sure for every picture, the number of landmarks per category is same 
+    for key, value in categorizedLandmarks.items():
+        length = set()
+        for coord in value:
+            length.add(len(coord[0]))
+        
+        print(length)
+        assert len(length) == 1
+        
+    return categorizedLandmarks
+
+def loadTrainingLandmarks():
+    return loadCategorizedLandmarks(True)
+
+def loadTestingLandmarks():
+    return loadCategorizedLandmarks(False)
+ 
+if __name__  == "__main__":   
+#    temp1 = loadData_Landmarks(True)
+    temp = loadCategorizedLandmarks(False)
