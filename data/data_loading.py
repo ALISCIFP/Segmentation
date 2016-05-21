@@ -195,16 +195,11 @@ def loadCategorizedLandmarks(isTraining):
             categorizedLandmarksPerFile[3] = []
             categorizedLandmarksPerFile[4] = []
             categorizedLandmarksPerFile[5] = []
-
-            for key, value in categorizedLandmarksPerFile.items():
-                value.append([])
-                value.append([])
             
             for line in file:
                 line = line.split()
                 
-                categorizedLandmarksPerFile[int(line[-1])][0].append(float(line[0]))
-                categorizedLandmarksPerFile[int(line[-1])][1].append(float(line[1]))
+                categorizedLandmarksPerFile[int(line[-1])].append([float(line[0]), float(line[1])])
             
             for key, value in categorizedLandmarksPerFile.items():            
                 categorizedLandmarks[key].append(value) 
@@ -213,7 +208,7 @@ def loadCategorizedLandmarks(isTraining):
     for key, value in categorizedLandmarks.items():
         length = set()
         for coord in value:
-            length.add(len(coord[0]))
+            length.add(len(coord))
         
         print(length)
         assert len(length) == 1
@@ -228,4 +223,4 @@ def loadTestingLandmarks():
  
 if __name__  == "__main__":   
 #    temp1 = loadData_Landmarks(True)
-    temp = loadCategorizedLandmarks(False)
+    temp = loadCategorizedLandmarks(True)
