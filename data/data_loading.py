@@ -175,7 +175,6 @@ def loadData_Images(isTraining):
     return images
 
 def loadCategorizedLandmarks(isTraining):
-    print(os.getcwd())
     if(isTraining):
         os.chdir("../data/Extracted Landmarks/train")
     else:
@@ -215,12 +214,37 @@ def loadCategorizedLandmarks(isTraining):
         
     return categorizedLandmarks
 
-def loadTrainingLandmarks():
+def loadTrainingLandmarks_Categorized():
     return loadCategorizedLandmarks(True)
 
-def loadTestingLandmarks():
+def loadTestingLandmarks_Categorized():
     return loadCategorizedLandmarks(False)
- 
+
+def loadAllLandmarks(isTraining):
+    if(isTraining):
+        os.chdir("../data/Extracted Landmarks/train")
+    else:
+        os.chdir("../data/Extracted Landmarks/test")
+    
+    allLandmarks = []
+    for filename in os.listdir(os.getcwd()):
+        with open(os.getcwd() + '/' + filename, 'r') as file:
+            landmarksPerFile = []
+            
+            for line in file:
+                line = line.split()
+                landmarksPerFile.append([float(line[0]), float(line[1])])
+            
+            allLandmarks.append(landmarksPerFile)
+        
+    return np.array(allLandmarks)
+
+def loadAllTrainingLandmarks():
+    return loadAllLandmarks(True)
+
+def loadAllTestingLandmarks():
+    return loadAllLandmarks(False)
+
 if __name__  == "__main__":   
 #    temp1 = loadData_Landmarks(True)
     temp = loadCategorizedLandmarks(True)

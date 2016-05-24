@@ -17,7 +17,7 @@ import os
 print(os.getcwd())
 sys.path.insert(0, '../data/')
 
-from data_loading import loadTrainingLandmarks, loadTestingLandmarks
+from data_loading import loadTrainingLandmarks_Categorized, loadTestingLandmarks_Categorized, loadAllTrainingLandmarks, loadAllTestingLandmarks
 
 a = np.array([[1, 3], [1, 2], [1, 1], [2, 1]], 'd')
 b = np.array([[4, -2], [4, -4], [4, -6], [2, -6]], 'd')
@@ -137,15 +137,9 @@ def procrustes2d_CorrectInput(origin):
     print(diff)
     return f
     
-#print(procrustes2d_CorrectInput(f))
+def Generalized_Proscrustes(origin):
+    return procrustes2d_CorrectInput(origin)
 
-temp = loadTrainingLandmarks()
-for key, value in temp.items():
-    print(key)
-    matrixAfterPro = procrustes2d_CorrectInput(np.array(value))
-    temp[key] = matrixAfterPro
-
-#f = np.array([[[0, 1, 2], [10, 11, 12], [0, 1, 2]], [[3, 4, 5], [6, 7, 8], [0, 1, 2]]], dtype = np.float)
 def procrustes3d(f):
     numberOfShapes = np.shape(f)[0]    
     timesToConverge = 0
@@ -193,26 +187,21 @@ def procrustes3d(f):
 
 #print(procrustes3d(f))
 
-#pca
-def pca(matrixAfterPro, metric, isWhiten):
-    if(type(metric) != float):
-        raise Exception("metric type error!")
-        
-    shape = np.shape(matrixAfterPro)
-    matrixAfterPro = np.reshape(matrixAfterPro, (shape[0], shape[1]*shape[2]))
-    
-    pca = PCA(n_components = metric, whiten = isWhiten)
-    matrixAfterPCA = pca.fit_transform(matrixAfterPro)
-    
-    return matrixAfterPCA
-
-def getEigenPairs(matrixAfterPro, name, retainPercentage):
+def getEigenPairs_All(matrixAfterPro, name, retainPercentage):
     if(type(retainPercentage) != float or type(name) != str):
         raise Exception("type error!")
     
-    shape = np.shape(matrixAfterPro)
-    matrixAfterPro = np.reshape(matrixAfterPro, (shape[0], shape[1]*shape[2]))
-    eigenValues, eigenVectors = eig(matrixAfterPro)
+    meanShape = np.mean(matrixAfterPro, axis = tuple([0, 1]))
+    print(meanShape)
+    matrixAfterPro -= meanShape
+    shape = np.shape(matrixAfterPro)[1]
+    print(shape)
+    cov = np.zeros([shape, shape])
+    for img in matrixAfterPro:
+        cov += matrix_multiply(img, img.T)
+    
+    cov /= np.shape(matrixAfterPro)[0] - 1
+    eigenValues, eigenVectors = eig(cov)
     percentage = eigenValues/np.sum(eigenValues)
     percentageIndexRank = np.argsort(percentage)[::-1]
     
@@ -221,18 +210,22 @@ def getEigenPairs(matrixAfterPro, name, retainPercentage):
     currPercentage = 0
     for i, index in enumerate(percentageIndexRank):
         newEigenVectors = np.append(newEigenVectors, eigenVectors[:, index])
-        sortedEigenvalues[i] = eigenValues[index]
+        sortedEigenvalues.append(eigenValues[index])
         currPercentage += percentage[index]
         if(currPercentage > retainPercentage):
             break
     
     newEigenVectors = newEigenVectors.T
     sortedEigenvalues = np.array(sortedEigenvalues)
+    print(sortedEigenvalues)
+    print(np.shape(sortedEigenvalues))
+    os.chdir("../../Caffe Input/test")
     with h5py.File(name + "_" + str(retainPercentage) + '.h5', 'w') as file:
         file['eigenvalue'] = sortedEigenvalues
         file['eigenvector'] = newEigenVectors
 
-shape = np.shape(value)
-matrixAfterPro = np.reshape(value, (shape[0], shape[1]*shape[2]))
-getEigenPairs(value, 'wtf', 0.98)
-print(pca(f, np.float(0.98), False))
+if __name__  == "__main__":  
+#    temp = loadTestingLandmarks_Categorized()
+    temp = loadAllTestingLandmarks()
+    matrixAfterPro = procrustes2d_CorrectInput(np.array(temp))
+    getEigenPairs_All(matrixAfterPro, 'all', 0.98)
