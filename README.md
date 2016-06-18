@@ -16,4 +16,11 @@ Data Preprocessing:
 2.Get the mean image
 
 The i-th image I_i
+The i-th annoation A_i
+The i-th similarity transformation X_i
+A_i*X_i=A_bar
 
+
+Get all the X_i and save it in a hdf5 format. the key is i and the value is teh X_i
+
+Then for each image I_i, Do I_i*X_i, then resize I_i to 224*224
