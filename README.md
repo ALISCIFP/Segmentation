@@ -14,7 +14,9 @@ bottom[1] should be b and it's shape should be num_images * t
 
 bottom[2] should be avg_q and it's shape should be num_marks * 2
 
-bottom[T] should be u and it's shape should be num_images * 2 * 3(make sure the data is row major, otherwise
+bottom[3] should be t and it's shape should be num_images * 2 * 3(output of the stn)
+
+(make sure the data is row major, otherwise
 
 [a b c]  [d e f] will be read as [a d b]  [e c f]
 		
