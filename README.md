@@ -12,7 +12,7 @@ http://arxiv.org/pdf/1411.7766v3.pdf
 
 Data Preprocessing:
 1.Get the mean shape A_bar
-
+note: the A_bar is normalized so all the Ai will be normalized and saved to file too.
 2.Get the mean image
 
 The i-th image I_i
