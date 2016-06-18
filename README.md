@@ -9,3 +9,11 @@ https://cseweb.ucsd.edu/classes/wi04/cse291-c/hw4.htm
 
 Paper:
 http://arxiv.org/pdf/1411.7766v3.pdf
+
+Data Preprocessing:
+1.Get the mean shape A_bar
+
+2.Get the mean image
+
+The i-th image I_i
+
