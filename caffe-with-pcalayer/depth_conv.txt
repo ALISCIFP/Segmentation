@@ -1,0 +1,404 @@
+I0613 20:04:17.433254  3401 caffe.cpp:185] Using GPUs 0
+I0613 20:04:17.441467  3401 caffe.cpp:190] GPU 0: GeForce GTX 980 Ti
+I0613 20:04:17.558957  3401 solver.cpp:48] Initializing solver from parameters: 
+test_iter: 16
+test_interval: 500
+base_lr: 0.001
+display: 100
+max_iter: 100000
+lr_policy: "fixed"
+momentum: 0.9
+snapshot: 5000
+snapshot_prefix: "/home/menglin/caffe-master/menglin_try/snapshot/"
+solver_mode: GPU
+device_id: 0
+net: "menglin_try/fake_channel_conv.prototxt"
+momentum2: 0.999
+type: "Adam"
+I0613 20:04:17.559056  3401 solver.cpp:91] Creating training net from net file: menglin_try/fake_channel_conv.prototxt
+I0613 20:04:17.559263  3401 net.cpp:313] The NetState phase (0) differed from the phase (1) specified by a rule in layer data
+I0613 20:04:17.559320  3401 net.cpp:49] Initializing net from parameters: 
+name: "mengNet"
+state {
+  phase: TRAIN
+}
+layer {
+  name: "data"
+  type: "HDF5Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  hdf5_data_param {
+    source: "/home/menglin/caffe-master/menglin_try/train.txt"
+    batch_size: 64
+  }
+}
+layer {
+  name: "reshape"
+  type: "Reshape"
+  bottom: "data"
+  top: "expand1"
+  reshape_param {
+    shape {
+      dim: 64
+      dim: 1
+      dim: 3
+      dim: 255
+      dim: 255
+    }
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "expand1"
+  top: "conv1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    kernel_size: 31
+    kernel_size: 31
+    stride: 1
+    stride: 7
+    stride: 7
+    weight_filler {
+      type: "gaussian"
+      std: 0.0001
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "reshape2"
+  type: "Reshape"
+  bottom: "conv1"
+  top: "shroten1"
+  reshape_param {
+    shape {
+      dim: 64
+      dim: -1
+      dim: 33
+      dim: 33
+    }
+  }
+}
+layer {
+  name: "ip1"
+  type: "InnerProduct"
+  bottom: "shroten1"
+  top: "ip1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 5
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "accuracy2"
+  type: "Accuracy"
+  bottom: "ip1"
+  bottom: "label"
+  top: "accuracy2"
+  include {
+    phase: TRAIN
+  }
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "ip1"
+  bottom: "label"
+  top: "loss"
+}
+I0613 20:04:17.559381  3401 layer_factory.hpp:77] Creating layer data
+I0613 20:04:17.559394  3401 net.cpp:91] Creating Layer data
+I0613 20:04:17.559399  3401 net.cpp:399] data -> data
+I0613 20:04:17.559417  3401 net.cpp:399] data -> label
+I0613 20:04:17.559427  3401 hdf5_data_layer.cpp:79] Loading list of HDF5 filenames from: /home/menglin/caffe-master/menglin_try/train.txt
+I0613 20:04:17.559442  3401 hdf5_data_layer.cpp:93] Number of HDF5 files: 1
+I0613 20:04:17.559945  3401 hdf5.cpp:32] Datatype class: H5T_FLOAT
+I0613 20:04:19.968122  3401 net.cpp:141] Setting up data
+I0613 20:04:19.968153  3401 net.cpp:148] Top shape: 64 3 255 255 (12484800)
+I0613 20:04:19.968159  3401 net.cpp:148] Top shape: 64 1 (64)
+I0613 20:04:19.968163  3401 net.cpp:156] Memory required for data: 49939456
+I0613 20:04:19.968171  3401 layer_factory.hpp:77] Creating layer label_data_1_split
+I0613 20:04:19.968197  3401 net.cpp:91] Creating Layer label_data_1_split
+I0613 20:04:19.968202  3401 net.cpp:425] label_data_1_split <- label
+I0613 20:04:19.968211  3401 net.cpp:399] label_data_1_split -> label_data_1_split_0
+I0613 20:04:19.968219  3401 net.cpp:399] label_data_1_split -> label_data_1_split_1
+I0613 20:04:19.968248  3401 net.cpp:141] Setting up label_data_1_split
+I0613 20:04:19.968253  3401 net.cpp:148] Top shape: 64 1 (64)
+I0613 20:04:19.968256  3401 net.cpp:148] Top shape: 64 1 (64)
+I0613 20:04:19.968258  3401 net.cpp:156] Memory required for data: 49939968
+I0613 20:04:19.968261  3401 layer_factory.hpp:77] Creating layer reshape
+I0613 20:04:19.968271  3401 net.cpp:91] Creating Layer reshape
+I0613 20:04:19.968274  3401 net.cpp:425] reshape <- data
+I0613 20:04:19.968278  3401 net.cpp:399] reshape -> expand1
+I0613 20:04:19.968303  3401 net.cpp:141] Setting up reshape
+I0613 20:04:19.968315  3401 net.cpp:148] Top shape: 64 1 3 255 255 (12484800)
+I0613 20:04:19.968318  3401 net.cpp:156] Memory required for data: 99879168
+I0613 20:04:19.968322  3401 layer_factory.hpp:77] Creating layer conv1
+I0613 20:04:19.968335  3401 net.cpp:91] Creating Layer conv1
+I0613 20:04:19.968339  3401 net.cpp:425] conv1 <- expand1
+I0613 20:04:19.968343  3401 net.cpp:399] conv1 -> conv1
+I0613 20:04:19.969882  3401 net.cpp:141] Setting up conv1
+I0613 20:04:19.969892  3401 net.cpp:148] Top shape: 64 32 3 33 33 (6690816)
+I0613 20:04:19.969894  3401 net.cpp:156] Memory required for data: 126642432
+I0613 20:04:19.969905  3401 layer_factory.hpp:77] Creating layer reshape2
+I0613 20:04:19.969913  3401 net.cpp:91] Creating Layer reshape2
+I0613 20:04:19.969916  3401 net.cpp:425] reshape2 <- conv1
+I0613 20:04:19.969920  3401 net.cpp:399] reshape2 -> shroten1
+I0613 20:04:19.969938  3401 net.cpp:141] Setting up reshape2
+I0613 20:04:19.969943  3401 net.cpp:148] Top shape: 64 96 33 33 (6690816)
+I0613 20:04:19.969945  3401 net.cpp:156] Memory required for data: 153405696
+I0613 20:04:19.969949  3401 layer_factory.hpp:77] Creating layer ip1
+I0613 20:04:19.969954  3401 net.cpp:91] Creating Layer ip1
+I0613 20:04:19.969957  3401 net.cpp:425] ip1 <- shroten1
+I0613 20:04:19.969961  3401 net.cpp:399] ip1 -> ip1
+I0613 20:04:19.980633  3401 net.cpp:141] Setting up ip1
+I0613 20:04:19.980644  3401 net.cpp:148] Top shape: 64 5 (320)
+I0613 20:04:19.980648  3401 net.cpp:156] Memory required for data: 153406976
+I0613 20:04:19.980655  3401 layer_factory.hpp:77] Creating layer ip1_ip1_0_split
+I0613 20:04:19.980660  3401 net.cpp:91] Creating Layer ip1_ip1_0_split
+I0613 20:04:19.980664  3401 net.cpp:425] ip1_ip1_0_split <- ip1
+I0613 20:04:19.980667  3401 net.cpp:399] ip1_ip1_0_split -> ip1_ip1_0_split_0
+I0613 20:04:19.980674  3401 net.cpp:399] ip1_ip1_0_split -> ip1_ip1_0_split_1
+I0613 20:04:19.980692  3401 net.cpp:141] Setting up ip1_ip1_0_split
+I0613 20:04:19.980696  3401 net.cpp:148] Top shape: 64 5 (320)
+I0613 20:04:19.980700  3401 net.cpp:148] Top shape: 64 5 (320)
+I0613 20:04:19.980702  3401 net.cpp:156] Memory required for data: 153409536
+I0613 20:04:19.980705  3401 layer_factory.hpp:77] Creating layer accuracy2
+I0613 20:04:19.980710  3401 net.cpp:91] Creating Layer accuracy2
+I0613 20:04:19.980713  3401 net.cpp:425] accuracy2 <- ip1_ip1_0_split_0
+I0613 20:04:19.980717  3401 net.cpp:425] accuracy2 <- label_data_1_split_0
+I0613 20:04:19.980720  3401 net.cpp:399] accuracy2 -> accuracy2
+I0613 20:04:19.980726  3401 net.cpp:141] Setting up accuracy2
+I0613 20:04:19.980731  3401 net.cpp:148] Top shape: (1)
+I0613 20:04:19.980732  3401 net.cpp:156] Memory required for data: 153409540
+I0613 20:04:19.980736  3401 layer_factory.hpp:77] Creating layer loss
+I0613 20:04:19.980741  3401 net.cpp:91] Creating Layer loss
+I0613 20:04:19.980743  3401 net.cpp:425] loss <- ip1_ip1_0_split_1
+I0613 20:04:19.980746  3401 net.cpp:425] loss <- label_data_1_split_1
+I0613 20:04:19.980751  3401 net.cpp:399] loss -> loss
+I0613 20:04:19.980762  3401 layer_factory.hpp:77] Creating layer loss
+I0613 20:04:19.981055  3401 net.cpp:141] Setting up loss
+I0613 20:04:19.981063  3401 net.cpp:148] Top shape: (1)
+I0613 20:04:19.981066  3401 net.cpp:151]     with loss weight 1
+I0613 20:04:19.981081  3401 net.cpp:156] Memory required for data: 153409544
+I0613 20:04:19.981083  3401 net.cpp:217] loss needs backward computation.
+I0613 20:04:19.981086  3401 net.cpp:219] accuracy2 does not need backward computation.
+I0613 20:04:19.981091  3401 net.cpp:217] ip1_ip1_0_split needs backward computation.
+I0613 20:04:19.981092  3401 net.cpp:217] ip1 needs backward computation.
+I0613 20:04:19.981096  3401 net.cpp:217] reshape2 needs backward computation.
+I0613 20:04:19.981098  3401 net.cpp:217] conv1 needs backward computation.
+I0613 20:04:19.981101  3401 net.cpp:219] reshape does not need backward computation.
+I0613 20:04:19.981104  3401 net.cpp:219] label_data_1_split does not need backward computation.
+I0613 20:04:19.981107  3401 net.cpp:219] data does not need backward computation.
+I0613 20:04:19.981117  3401 net.cpp:261] This network produces output accuracy2
+I0613 20:04:19.981122  3401 net.cpp:261] This network produces output loss
+I0613 20:04:19.981128  3401 net.cpp:274] Network initialization done.
+I0613 20:04:19.981334  3401 solver.cpp:181] Creating test net (#0) specified by net file: menglin_try/fake_channel_conv.prototxt
+I0613 20:04:19.981350  3401 net.cpp:313] The NetState phase (1) differed from the phase (0) specified by a rule in layer data
+I0613 20:04:19.981358  3401 net.cpp:313] The NetState phase (1) differed from the phase (0) specified by a rule in layer accuracy2
+I0613 20:04:19.981407  3401 net.cpp:49] Initializing net from parameters: 
+name: "mengNet"
+state {
+  phase: TEST
+}
+layer {
+  name: "data"
+  type: "HDF5Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  hdf5_data_param {
+    source: "/home/menglin/caffe-master/menglin_try/test.txt"
+    batch_size: 64
+  }
+}
+layer {
+  name: "reshape"
+  type: "Reshape"
+  bottom: "data"
+  top: "expand1"
+  reshape_param {
+    shape {
+      dim: 64
+      dim: 1
+      dim: 3
+      dim: 255
+      dim: 255
+    }
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "expand1"
+  top: "conv1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    kernel_size: 31
+    kernel_size: 31
+    stride: 1
+    stride: 7
+    stride: 7
+    weight_filler {
+      type: "gaussian"
+      std: 0.0001
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "reshape2"
+  type: "Reshape"
+  bottom: "conv1"
+  top: "shroten1"
+  reshape_param {
+    shape {
+      dim: 64
+      dim: -1
+      dim: 33
+      dim: 33
+    }
+  }
+}
+layer {
+  name: "ip1"
+  type: "InnerProduct"
+  bottom: "shroten1"
+  top: "ip1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 5
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "ip1"
+  bottom: "label"
+  top: "loss"
+}
+I0613 20:04:19.981431  3401 layer_factory.hpp:77] Creating layer data
+I0613 20:04:19.981437  3401 net.cpp:91] Creating Layer data
+I0613 20:04:19.981441  3401 net.cpp:399] data -> data
+I0613 20:04:19.981447  3401 net.cpp:399] data -> label
+I0613 20:04:19.981452  3401 hdf5_data_layer.cpp:79] Loading list of HDF5 filenames from: /home/menglin/caffe-master/menglin_try/test.txt
+I0613 20:04:19.981465  3401 hdf5_data_layer.cpp:93] Number of HDF5 files: 1
+I0613 20:04:20.281425  3401 net.cpp:141] Setting up data
+I0613 20:04:20.281460  3401 net.cpp:148] Top shape: 64 3 255 255 (12484800)
+I0613 20:04:20.281466  3401 net.cpp:148] Top shape: 64 1 (64)
+I0613 20:04:20.281469  3401 net.cpp:156] Memory required for data: 49939456
+I0613 20:04:20.281476  3401 layer_factory.hpp:77] Creating layer reshape
+I0613 20:04:20.281489  3401 net.cpp:91] Creating Layer reshape
+I0613 20:04:20.281494  3401 net.cpp:425] reshape <- data
+I0613 20:04:20.281500  3401 net.cpp:399] reshape -> expand1
+I0613 20:04:20.281525  3401 net.cpp:141] Setting up reshape
+I0613 20:04:20.281530  3401 net.cpp:148] Top shape: 64 1 3 255 255 (12484800)
+I0613 20:04:20.281533  3401 net.cpp:156] Memory required for data: 99878656
+I0613 20:04:20.281535  3401 layer_factory.hpp:77] Creating layer conv1
+I0613 20:04:20.281546  3401 net.cpp:91] Creating Layer conv1
+I0613 20:04:20.281549  3401 net.cpp:425] conv1 <- expand1
+I0613 20:04:20.281554  3401 net.cpp:399] conv1 -> conv1
+I0613 20:04:20.282289  3401 net.cpp:141] Setting up conv1
+I0613 20:04:20.282294  3401 net.cpp:148] Top shape: 64 32 3 33 33 (6690816)
+I0613 20:04:20.282297  3401 net.cpp:156] Memory required for data: 126641920
+I0613 20:04:20.282305  3401 layer_factory.hpp:77] Creating layer reshape2
+I0613 20:04:20.282311  3401 net.cpp:91] Creating Layer reshape2
+I0613 20:04:20.282315  3401 net.cpp:425] reshape2 <- conv1
+I0613 20:04:20.282318  3401 net.cpp:399] reshape2 -> shroten1
+I0613 20:04:20.282342  3401 net.cpp:141] Setting up reshape2
+I0613 20:04:20.282353  3401 net.cpp:148] Top shape: 64 96 33 33 (6690816)
+I0613 20:04:20.282356  3401 net.cpp:156] Memory required for data: 153405184
+I0613 20:04:20.282359  3401 layer_factory.hpp:77] Creating layer ip1
+I0613 20:04:20.282374  3401 net.cpp:91] Creating Layer ip1
+I0613 20:04:20.282377  3401 net.cpp:425] ip1 <- shroten1
+I0613 20:04:20.282382  3401 net.cpp:399] ip1 -> ip1
+I0613 20:04:20.293143  3401 net.cpp:141] Setting up ip1
+I0613 20:04:20.293155  3401 net.cpp:148] Top shape: 64 5 (320)
+I0613 20:04:20.293159  3401 net.cpp:156] Memory required for data: 153406464
+I0613 20:04:20.293165  3401 layer_factory.hpp:77] Creating layer loss
+I0613 20:04:20.293171  3401 net.cpp:91] Creating Layer loss
+I0613 20:04:20.293174  3401 net.cpp:425] loss <- ip1
+I0613 20:04:20.293179  3401 net.cpp:425] loss <- label
+I0613 20:04:20.293182  3401 net.cpp:399] loss -> loss
+I0613 20:04:20.293190  3401 layer_factory.hpp:77] Creating layer loss
+I0613 20:04:20.293241  3401 net.cpp:141] Setting up loss
+I0613 20:04:20.293246  3401 net.cpp:148] Top shape: (1)
+I0613 20:04:20.293248  3401 net.cpp:151]     with loss weight 1
+I0613 20:04:20.293258  3401 net.cpp:156] Memory required for data: 153406468
+I0613 20:04:20.293261  3401 net.cpp:217] loss needs backward computation.
+I0613 20:04:20.293264  3401 net.cpp:217] ip1 needs backward computation.
+I0613 20:04:20.293267  3401 net.cpp:217] reshape2 needs backward computation.
+I0613 20:04:20.293269  3401 net.cpp:217] conv1 needs backward computation.
+I0613 20:04:20.293272  3401 net.cpp:219] reshape does not need backward computation.
+I0613 20:04:20.293275  3401 net.cpp:219] data does not need backward computation.
+I0613 20:04:20.293278  3401 net.cpp:261] This network produces output loss
+I0613 20:04:20.293283  3401 net.cpp:274] Network initialization done.
+I0613 20:04:20.293316  3401 solver.cpp:60] Solver scaffolding done.
+I0613 20:04:20.293434  3401 caffe.cpp:219] Starting Optimization
+I0613 20:04:20.293438  3401 solver.cpp:279] Solving mengNet
+I0613 20:04:20.293442  3401 solver.cpp:280] Learning Rate Policy: fixed
+I0613 20:04:20.293694  3401 solver.cpp:337] Iteration 0, Testing net (#0)
+I0613 20:04:20.293702  3401 net.cpp:684] Ignoring source layer label_data_1_split
+I0613 20:04:20.293993  3401 net.cpp:684] Ignoring source layer ip1_ip1_0_split
+I0613 20:04:20.294000  3401 net.cpp:684] Ignoring source layer accuracy2
+I0613 20:04:21.639544  3401 solver.cpp:404]     Test net output #0: loss = 2.2443 (* 1 = 2.2443 loss)
+I0613 20:04:21.725304  3401 solver.cpp:228] Iteration 0, loss = 2.1583
+I0613 20:04:21.725322  3401 solver.cpp:244]     Train net output #0: accuracy2 = 0.078125
+I0613 20:04:21.725329  3401 solver.cpp:244]     Train net output #1: loss = 2.1583 (* 1 = 2.1583 loss)
+I0613 20:04:21.725335  3401 sgd_solver.cpp:106] Iteration 0, lr = 0.001
+I0613 20:04:32.570605  3401 solver.cpp:454] Snapshotting to binary proto file /home/menglin/caffe-master/menglin_try/snapshot/_iter_66.caffemodel
+I0613 20:04:32.658869  3401 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /home/menglin/caffe-master/menglin_try/snapshot/_iter_66.solverstate
+I0613 20:04:32.662688  3401 solver.cpp:301] Optimization stopped early.
+I0613 20:04:32.662699  3401 caffe.cpp:222] Optimization Done.
