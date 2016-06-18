@@ -23,4 +23,4 @@ A_i*X_i=A_bar
 
 Get all the X_i and save it in a hdf5 format. the key is i and the value is teh X_i
 
-Then for each image I_i, Do I_i*X_i, then resize I_i to 224*224
+Then for each image I_i, Do I_i * X_i, then resize I_i to 224 * 224
