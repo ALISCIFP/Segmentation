@@ -18,9 +18,13 @@ note: the A_bar is normalized so all the Ai will be normalized and saved to file
 The i-th image I_i
 
 The i-th annoation A_i
+
 The i-th affine transformation or Thin plate spline matrix X_i
+
 Get X_i from A_bar*X_i = A_i_prime
+
 minimize L2(A_i-A_i_prime)
+
 The i-th image after transormation I_i_prime,its dimension is 224*224
 
 I_i_prime*X_i=I_i to sample the pixel value from I_i to I_i_prime
