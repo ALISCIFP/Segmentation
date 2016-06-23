@@ -31,4 +31,5 @@ I_i_prime*X_i=I_i to sample the pixel value from I_i to I_i_prime
 
 then mean the I_i_prime to get the mean image I_bar.
 
+ImageNet 2016 Scene Segmentation Task: http://sceneparsing.csail.mit.edu/
 
