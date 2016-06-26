@@ -16,13 +16,21 @@ note: the A_bar is normalized so all the Ai will be normalized and saved to file
 2.Get the mean image
 
 The i-th image I_i
+
 The i-th annoation A_i
-The i-th similarity transformation X_i
-A_i*X_i=A_bar
 
+The i-th affine transformation or Thin plate spline matrix X_i
 
-Get all the X_i and save it in a hdf5 format. the key is i and the value is teh X_i
+Get X_i from A_bar*X_i = A_i_prime
 
-Then for each image I_i, Do I_i_prime I_i * X_i, then resize I_i to 224 * 224
+minimize L2(A_i-A_i_prime)
 
-At last, mean all the I_i_prime.
+The i-th image after transormation I_i_prime,its dimension is 224*224
+
+I_i_prime*X_i=I_i to sample the pixel value from I_i to I_i_prime
+
+then mean the I_i_prime to get the mean image I_bar.
+
+ImageNet 2016 Scene Segmentation Task: http://sceneparsing.csail.mit.edu/
+
+http://vision.stanford.edu/teaching/cs231n/slides/caffe_tutorial.pdf
