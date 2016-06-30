@@ -30,12 +30,12 @@ def Affine_Fit( from_pts, to_pts ):
     q = from_pts
     p = to_pts
     if len(q) != len(p) or len(q)<1:
-        print "from_pts and to_pts must be of same size."
+        print("from_pts and to_pts must be of same size.")
         return false
 
     dim = len(q[0]) # num of dimensions
     if len(q) < dim:
-        print "Too few points => under-determined system."
+        print("Too few points => under-determined system.")
         return false
 
     # Make an empty (dim) x (dim+1) matrix and fill it
@@ -86,7 +86,7 @@ def Affine_Fit( from_pts, to_pts ):
     # Augement Q with c and solve Q * a' = c by Gauss-Jordan
     M = [ Q[i] + c[i] for i in range(dim+1)]
     if not gauss_jordan(M):
-        print "Error: singular matrix. Points are probably coplanar."
+        print("Error: singular matrix. Points are probably coplanar.")
         return false
 
     # Make a result object
@@ -106,8 +106,8 @@ def Affine_Fit( from_pts, to_pts ):
             return res
 
         def Transfor_Matrix(self):
-            tmp = [];
-            ret = [];
+            tmp = []
+            ret = []
             for j in range(dim):
                 tmp.append([])
                 for i in range(dim):
@@ -189,7 +189,7 @@ if __name__ == "__main__":
         X_i_dictionary[idx] = trn.Transfor_Matrix()
 
     #不是很确定这个save的h5对不对
-    dd.io.save('/Users/lengyue.chen/Desktop/test.h5', X_i_dictionary, compression=None) 
+    dd.io.save('test.h5', X_i_dictionary, compression=None) 
 
 
     
