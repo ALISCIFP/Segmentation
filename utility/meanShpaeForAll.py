@@ -31,7 +31,7 @@ def bilinearInterpolation(x, y, points):
 def getTransCoord(x, y, transMatrix):
     matrix2 = np.array([x, y, 1]).T
     
-    coord = transMatrix * matrix2
+    coord = transMatrix.T * matrix2
     
     return coord[0], coord[1]
 
@@ -75,20 +75,21 @@ def readImgGetTrans(filename, transMatrix):
 
 if __name__ == '__main__':
     transMatrix = dd.io.load('test.h5')
-    result = []
-    pwd = os.getcwd()
-    os.chdir(imgDir)
-    for i in os.listdir(imgDir):
-        if i.endswith(".jpg"): 
-            filename = os.path.basename(i)
-            print(filename)
-            key = int(filename.split('.')[0])
-            transImg = readImgGetTrans(i, transMatrix[key])
-            result.append(transImg)
-            break
-        else:
-            continue
-    
-    result = np.array(result)    
-    os.chdir(pwd)
-    np.save('meanShape24_24', np.mean(result, axis = 0))
+    print(transMatrix)
+#    result = []
+#    pwd = os.getcwd()
+#    os.chdir(imgDir)
+#    for i in os.listdir(imgDir):
+#        if i.endswith(".jpg"): 
+#            filename = os.path.basename(i)
+#            print(filename)
+#            key = int(filename.split('.')[0])
+#            transImg = readImgGetTrans(i, transMatrix[key])
+#            result.append(transImg)
+#            break
+#        else:
+#            continue
+#    
+#    result = np.array(result)    
+#    os.chdir(pwd)
+#    np.save('meanShape24_24', np.mean(result, axis = 0))
