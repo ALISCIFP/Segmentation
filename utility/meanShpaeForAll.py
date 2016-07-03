@@ -29,7 +29,8 @@ def bilinearInterpolation(x, y, points):
            ) / ((x2 - x1) * (y2 - y1) + 0.0)
 
 def getTransCoord(x, y, transMatrix):
-    matrix2 = np.array([x, y, 1]).T
+    matrix2 = np.array([x, y, 1])
+    matrix2 = np.reshape(matrix2, (3,1))
     
     coord = transMatrix.T * matrix2
     
