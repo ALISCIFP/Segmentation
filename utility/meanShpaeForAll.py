@@ -45,7 +45,7 @@ def readImgGetTrans(filename, transMatrix):
     greenChannel = []
     blueChannel = []
     for x, y in product(range(len(red)), repeat = 2):
-        x_, y_ = getTransCoord(x, y)
+        x_, y_ = getTransCoord(x, y, transMatrix)
         smallX = int(x_)
         smallY = int(y_)
         largeX = int(x_) + 1
