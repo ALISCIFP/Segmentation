@@ -76,7 +76,7 @@ def readImgGetTrans(filename, transMatrix):
 if __name__ == '__main__':
     transMatrix = dd.io.load('test.h5')
     result = []
-    pwd = os.pwd()
+    pwd = os.getcwd()
     os.chdir(imgDir)
     for i in os.listdir(imgDir):
         if i.endswith(".jpg"): 
