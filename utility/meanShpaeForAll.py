@@ -51,21 +51,21 @@ def readImgGetTrans(filename, transMatrix):
         smallY = int(y_)
         largeX = int(x_) + 1
         largeY = int(y_) + 1 
-        redValue = bilinearInterpolation(x_, y_, tuple(smallX, smallY, red[smallX][smallY]), \
-                                            tuple(smallX, largeY, red[smallX][largeY]), \
-                                            tuple(largeX, smallY, red[largeX][smallY]), \
-                                            tuple(largeX, largeY, red[largeX][largeY]))
+        redValue = bilinearInterpolation(x_, y_, [tuple([smallX, smallY, red[smallX][smallY]]), \
+                                            tuple([smallX, largeY, red[smallX][largeY]]), \
+                                            tuple([largeX, smallY, red[largeX][smallY]]), \
+                                            tuple([largeX, largeY, red[largeX][largeY]])])
         
-        greenValue = bilinearInterpolation(x_, y_, tuple(smallX, smallY, green[smallX][smallY]), \
-                                            tuple(smallX, largeY, green[smallX][largeY]), \
-                                            tuple(largeX, smallY, green[largeX][smallY]), \
-                                            tuple(largeX, largeY, green[largeX][largeY]))
+        greenValue = bilinearInterpolation(x_, y_, [tuple([smallX, smallY, green[smallX][smallY]]), \
+                                            tuple([smallX, largeY, green[smallX][largeY]]), \
+                                            tuple([largeX, smallY, green[largeX][smallY]]), \
+                                            tuple([largeX, largeY, green[largeX][largeY]])])
         
         
-        blueValue = bilinearInterpolation(x_, y_, tuple(smallX, smallY, blue[smallX][smallY]), \
-                                            tuple(smallX, largeY, blue[smallX][largeY]), \
-                                            tuple(largeX, smallY, blue[largeX][smallY]), \
-                                            tuple(largeX, largeY, blue[largeX][largeY]))
+        blueValue = bilinearInterpolation(x_, y_, [tuple([smallX, smallY, blue[smallX][smallY]]), \
+                                            tuple([smallX, largeY, blue[smallX][largeY]]), \
+                                            tuple([largeX, smallY, blue[largeX][smallY]]), \
+                                            tuple([largeX, largeY, blue[largeX][largeY]])])
     
         redChannel.append(redValue)
         greenChannel.append(greenValue)
