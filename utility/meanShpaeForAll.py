@@ -16,6 +16,10 @@ imgDir = '/home/alisc/data/img_align_celeba'
 def bilinearInterpolation(x, y, points):
     points = sorted(points)               # order points by x, then by y
     (x1, y1, q11), (_x1, y2, q12), (x2, _y1, q21), (_x2, _y2, q22) = points
+    print(x1, y1, q11)
+    print(_x1, y2, q12)
+    print(x2, _y1, q21)
+    print(_x2, _y2, q22)
 
     if x1 != _x1 or x2 != _x2 or y1 != _y1 or y2 != _y2:
         raise ValueError('points do not form a rectangle')
