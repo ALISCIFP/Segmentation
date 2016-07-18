@@ -57,7 +57,7 @@ def readImgGetTrans(filename, transMatrix):
         smallY = int(y_)
         largeX = int(x_) + 1
         largeY = int(y_) + 1
-        if(x_ < 0 or y_ < 0):
+        if(int(x_) < 0 or int(y_) < 0):
             redChannel.append(0)
             greenChannel.append(0)
             blueChannel.append(0)
