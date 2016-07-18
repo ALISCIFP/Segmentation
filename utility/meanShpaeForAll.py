@@ -49,14 +49,16 @@ def readImgGetTrans(filename, transMatrix):
     redChannel = []
     greenChannel = []
     blueChannel = []
-    for x, y in product(range(len(red)), repeat = 2):
+    for x, y in product(range(24), repeat = 2):
         x_, y_ = getTransCoord(x, y, transMatrix)
         print(x, y)
         print(x_, y_)
         smallX = int(x_)
         smallY = int(y_)
         largeX = int(x_) + 1
-        largeY = int(y_) + 1 
+        largeY = int(y_) + 1
+        if(x_ < 0 or y_ < 0):
+            return [0, 0, 0]
         redValue = bilinearInterpolation(x_, y_, [tuple([smallX, smallY, red[smallX][smallY]]), \
                                             tuple([smallX, largeY, red[smallX][largeY]]), \
                                             tuple([largeX, smallY, red[largeX][smallY]]), \
