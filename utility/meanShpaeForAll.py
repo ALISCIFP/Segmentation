@@ -61,6 +61,7 @@ def readImgGetTrans(filename, transMatrix):
             redChannel.append(0)
             greenChannel.append(0)
             blueChannel.append(0)
+            continue
         redValue = bilinearInterpolation(x_, y_, [tuple([smallX, smallY, red[smallX][smallY]]), \
                                             tuple([smallX, largeY, red[smallX][largeY]]), \
                                             tuple([largeX, smallY, red[largeX][smallY]]), \
