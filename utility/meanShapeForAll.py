@@ -89,21 +89,20 @@ def readImgGetTrans(filename, transMatrix):
 if __name__ == '__main__':
     transMatrix = dd.io.load('test.h5')
     print(transMatrix)
-#    return
-#    result = []
-#    pwd = os.getcwd()
-#    os.chdir(imgDir)
-#    for i in os.listdir(imgDir):
-#        if i.endswith(".jpg"): 
-#            filename = os.path.basename(i)
-#            print(filename)
-#            key = int(filename.split('.')[0])
-#            transImg = readImgGetTrans(i, transMatrix[key])
-#            result.append(transImg)
-#            break
-#        else:
-#            continue
-#    
-#    result = np.array(result)    
-#    os.chdir(pwd)
-#    np.save('meanShape24_24', np.mean(result, axis = 0))
+    result = []
+    pwd = os.getcwd()
+    os.chdir(imgDir)
+    for i in os.listdir(imgDir):
+        if i.endswith(".jpg"): 
+            filename = os.path.basename(i)
+            print(filename)
+            key = int(filename.split('.')[0])
+            transImg = readImgGetTrans(i, transMatrix[key])
+            result.append(transImg)
+            break
+        else:
+            continue
+    
+    result = np.array(result)    
+    os.chdir(pwd)
+    np.save('meanShape24_24', np.mean(result, axis = 0))
