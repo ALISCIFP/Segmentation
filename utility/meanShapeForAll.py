@@ -50,9 +50,11 @@ def readImgGetTrans(filename, transMatrix):
     redChannel = []
     greenChannel = []
     blueChannel = []
+    print(transMatrix.T)
     for x, y in product(range(24), repeat = 2):
         x_, y_ = getTransCoord(x, y, transMatrix)
-        print(x, y)
+        print(x, y, end="")
+        print(":", end="")
         print(x_, y_)
         smallX = int(x_)
         smallY = int(y_)
@@ -88,7 +90,6 @@ def readImgGetTrans(filename, transMatrix):
 
 if __name__ == '__main__':
     transMatrix = dd.io.load('test.h5')
-    print(transMatrix)
     result = []
     pwd = os.getcwd()
     os.chdir(imgDir)
