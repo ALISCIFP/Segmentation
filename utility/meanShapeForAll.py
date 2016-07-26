@@ -5,6 +5,7 @@ Spyder Editor
 This is a temporary script file.
 """
 
+from __future__ import print_function
 import numpy as np
 import deepdish as dd
 from scipy import misc
