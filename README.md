@@ -33,4 +33,8 @@ then mean the I_i_prime to get the mean image I_bar.
 
 ImageNet 2016 Scene Segmentation Task: http://sceneparsing.csail.mit.edu/
 
+
 http://vision.stanford.edu/teaching/cs231n/slides/caffe_tutorial.pdf
+
+Face Landmark dataset: CeleA
+http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html
