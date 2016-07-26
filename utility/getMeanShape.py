@@ -90,6 +90,6 @@ def procrustes2d(origin):
 if __name__ == "__main__":
     tmp = readAnnotationFile()
     normalizedShapes, meanShape = procrustes2d(tmp)
-    np.savetxt("meanShape.txt", meanShape[0])
+    np.savetxt("meanShape2.txt", meanShape[0])
     np.save("normalizedShapes", normalizedShapes)
             

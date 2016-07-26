@@ -46,6 +46,7 @@ def readImgGetTrans(filename, transMatrix):
     green = img[:,:,1]
     blue = img[:,:,2]
     
+    print(np.dim(red))
     redChannel = []
     greenChannel = []
     blueChannel = []
