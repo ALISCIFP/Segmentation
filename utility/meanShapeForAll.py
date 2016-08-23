@@ -51,17 +51,16 @@ def readImgGetTrans(filename, transMatrix):
     redChannel = []
     greenChannel = []
     blueChannel = []
-    print(transMatrix.T)
-    for x, y in product(range(24), repeat = 2):
+    return 
+    for x, y in product(range(224), range(178)):
         x_, y_ = getTransCoord(x, y, transMatrix)
-        print(x, y, end="")
-        print(":", end="")
-        print(x_, y_)
         smallX = int(x_)
         smallY = int(y_)
         largeX = int(x_) + 1
         largeY = int(y_) + 1
-        if(int(x_) < 0 or int(y_) < 0):
+        if(int(x_) < 0 or int(y_) < 0 or int(x_) >= 224 or int(y_) >= 178):
+            print(x_)
+            print(y_)
             redChannel.append(0)
             greenChannel.append(0)
             blueChannel.append(0)
