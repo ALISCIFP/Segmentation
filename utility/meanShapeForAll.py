@@ -17,11 +17,7 @@ imgDir = '/home/alisc/data/img_align_celeba'
 def bilinearInterpolation(x, y, points):
     points = sorted(points)               # order points by x, then by y
     (x1, y1, q11), (_x1, y2, q12), (x2, _y1, q21), (_x2, _y2, q22) = points
-    print(x1, y1, q11)
-    print(_x1, y2, q12)
-    print(x2, _y1, q21)
-    print(_x2, _y2, q22)
-
+    
     if x1 != _x1 or x2 != _x2 or y1 != _y1 or y2 != _y2:
         raise ValueError('points do not form a rectangle')
     if not x1 <= x <= x2 or not y1 <= y <= y2:
@@ -42,28 +38,27 @@ def getTransCoord(x, y, transMatrix):
     return coord[0], coord[1]
 
 def readImgGetTrans(filename, transMatrix):
+    nums = 0
     img = misc.imread(filename)
     red = img[:,:,0]
     green = img[:,:,1]
     blue = img[:,:,2]
     
-    print(np.dim(red))
+    print(np.shape(red))
     redChannel = []
     greenChannel = []
-    blueChannel = []
-    return 
-    for x, y in product(range(224), range(178)):
+    blueChannel = [] 
+    for x, y in product(range(218), range(178)):
         x_, y_ = getTransCoord(x, y, transMatrix)
         smallX = int(x_)
         smallY = int(y_)
         largeX = int(x_) + 1
         largeY = int(y_) + 1
-        if(int(x_) < 0 or int(y_) < 0 or int(x_) >= 224 or int(y_) >= 178):
-            print(x_)
-            print(y_)
+        if(x_ < 0 or y_ < 0 or x_ >= 217 or y_ >= 177):
             redChannel.append(0)
             greenChannel.append(0)
             blueChannel.append(0)
+	    nums += 1
             continue
         redValue = bilinearInterpolation(x_, y_, [tuple([smallX, smallY, red[smallX][smallY]]), \
                                             tuple([smallX, largeY, red[smallX][largeY]]), \
@@ -85,7 +80,8 @@ def readImgGetTrans(filename, transMatrix):
         greenChannel.append(greenValue)
         blueChannel.append(blueValue)
     
-    return [np.reshape(redChannel, (24, 24)), np.reshape(greenChannel, (24, 24)), np.reshape(blueChannel, (24, 24))]
+    print(nums)
+    return [np.reshape(redChannel, (218, 178)), np.reshape(greenChannel, (218, 178)), np.reshape(blueChannel, (218, 178))]
         
 
 if __name__ == '__main__':
@@ -100,7 +96,6 @@ if __name__ == '__main__':
             key = int(filename.split('.')[0])
             transImg = readImgGetTrans(i, transMatrix[key])
             result.append(transImg)
-            break
         else:
             continue
     
