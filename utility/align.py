@@ -13,7 +13,7 @@ import deepdish as dd
 from sympy import *
 
 fileName = "meanShape.txt"
-datafileName = "list_landmarks_celeba.txt"
+datafileName = "list_landmarks_align_celeba.txt"
 
 def Affine_Fit( from_pts, to_pts ):
     """Fit an affine transformation to given point sets.
@@ -187,8 +187,8 @@ if __name__ == "__main__":
         landmark_tuple =  convert(landmark)
         trn = Affine_Fit(landmark_tuple,mean_shape_tuple)    
         X_i_dictionary[idx] = trn.Transfor_Matrix()
-       # print(trn.Transfor_Matrix())
-	print (trn.To_Str())
+        #print(trn.Transfor_Matrix())
+	#print (trn.To_Str())
     #不是很确定这个save的h5对不对
     dd.io.save('test.h5', X_i_dictionary, compression=None) 
 

@@ -11,7 +11,7 @@ import numpy as np
 import h5py
 from scipy.spatial import procrustes
 
-fileName = "list_landmarks_celeba.txt"
+fileName = "list_landmarks_align_celeba.txt"
 
 #read file
 def readAnnotationFile():

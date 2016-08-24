@@ -7,7 +7,7 @@ Created on Sat Jul 23 14:51:35 2016
 
 import numpy as np
 
-fileName = "list_landmarks_celeba.txt"
+fileName = "list_landmarks_align_celeba.txt"
 
 #read file
 def readAnnotationFile():

@@ -40,6 +40,7 @@ def getTransCoord(x, y, transMatrix):
 def readImgGetTrans(filename, transMatrix):
     nums = 0
     img = misc.imread(filename)
+    print(np.shape(img))
     red = img[:,:,0]
     green = img[:,:,1]
     blue = img[:,:,2]
