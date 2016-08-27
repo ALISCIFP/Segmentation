@@ -11,6 +11,7 @@ import deepdish as dd
 from scipy import misc
 from itertools import product
 import os
+from multiprocessing import Pool
 
 imgDir = '/home/alisc/data/img_align_celeba'
 
@@ -40,12 +41,10 @@ def getTransCoord(x, y, transMatrix):
 def readImgGetTrans(filename, transMatrix):
     nums = 0
     img = misc.imread(filename)
-    print(np.shape(img))
     red = img[:,:,0]
     green = img[:,:,1]
     blue = img[:,:,2]
     
-    print(np.shape(red))
     redChannel = []
     greenChannel = []
     blueChannel = [] 
@@ -59,7 +58,7 @@ def readImgGetTrans(filename, transMatrix):
             redChannel.append(0)
             greenChannel.append(0)
             blueChannel.append(0)
-	    nums += 1
+            nums += 1
             continue
         redValue = bilinearInterpolation(x_, y_, [tuple([smallX, smallY, red[smallX][smallY]]), \
                                             tuple([smallX, largeY, red[smallX][largeY]]), \
@@ -85,25 +84,40 @@ def readImgGetTrans(filename, transMatrix):
     return [np.reshape(redChannel, (218, 178)), np.reshape(greenChannel, (218, 178)), np.reshape(blueChannel, (218, 178))]
         
 
+def getFilesForRound(dir, lastEnd):
+    ret = []
+    before = False
+    if(lastEnd == ''):
+        before = True
+    for i in os.listdir(imgDir):
+        if i.endswith(".jpg"):
+            if(not before):
+                if(i == lastEnd):
+                    before = True
+                    ret.append(i)
+            else:
+                ret.append(i)
+                if(len(ret) == 22511):
+                    return ret, i
+
+def run(file):
+    filename = os.path.basename(file)
+    print(filename)
+    key = int(filename.split('.')[0])
+    transImg = readImgGetTrans(i, transMatrix[key])
+    return transImg
+
 if __name__ == '__main__':
     transMatrix = dd.io.load('test.h5')
     result = []
     pwd = os.getcwd()
     os.chdir(imgDir)
-    avgs = []
-    for i in os.listdir(imgDir):
-        if i.endswith(".jpg"): 
-            filename = os.path.basename(i)
-            print(filename)
-            key = int(filename.split('.')[0])
-            transImg = readImgGetTrans(i, transMatrix[key])
-            result.append(transImg)
-            if(len(result) == 22511):
-                avgs.append(np.mean(result, axis = 0))
-                result= []
-        else:
-            continue
-    
-    result = np.array(result)    
+    lastEnd = ''
+    pool = Pool()
+    for i in range(9):
+        files, lastEnd = getFilesForRound(imgDir, lastEnd)
+        affinedImgs = pool.map(run, files)
+        result.append(np.mean(affinedImgs, axis = 0))
+        
     os.chdir(pwd)
-    np.save('meanShape24_24', np.mean(avgs, axis = 0))
+    np.save('meanShape24_24', np.mean(result, axis = 0))
