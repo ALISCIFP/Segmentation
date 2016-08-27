@@ -90,6 +90,7 @@ if __name__ == '__main__':
     result = []
     pwd = os.getcwd()
     os.chdir(imgDir)
+    avgs = []
     for i in os.listdir(imgDir):
         if i.endswith(".jpg"): 
             filename = os.path.basename(i)
@@ -97,9 +98,12 @@ if __name__ == '__main__':
             key = int(filename.split('.')[0])
             transImg = readImgGetTrans(i, transMatrix[key])
             result.append(transImg)
+            if(len(result) == 22511):
+                avgs.append(np.mean(result, axis = 0))
+                result= []
         else:
             continue
     
     result = np.array(result)    
     os.chdir(pwd)
-    np.save('meanShape24_24', np.mean(result, axis = 0))
+    np.save('meanShape24_24', np.mean(avgs, axis = 0))
