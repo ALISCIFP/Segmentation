@@ -1,7 +1,7 @@
 """
 Author: Lengyue Chen
 Date: 08/31/2016
-Adapted from the inference.py to demonstate the usage of the util functions.
+Usage: python crf.py /home/alisc/SegNet/ADEChallengeData2016/images/validation /home/alisc/SegNet/ADEChallengeData2016/annotations/validation output
 """
 
 import sys
