@@ -138,7 +138,7 @@ def crf(fn_im,fn_anno,fn_output):
 if len(sys.argv) != 4:
     print("Usage: python {} IMAGE ANNO OUTPUT".format(sys.argv[0]))
     print("")
-    print("IMAGE and ANNO are inputs and OUTPUT is where the result should be written.")
+    print("IMAGE and ANNO are inputs image folders and OUTPUT is the folder where the result should be written.")
     sys.exit(1)
 
 fn_im_folder_path = sys.argv[1]
