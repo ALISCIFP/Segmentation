@@ -25,7 +25,6 @@ def crf(fn_im,fn_anno,fn_output,colorful_fn_output):
     #truth_img = imread(truth_image).astype(np.uint8)
     # Convert the annotation's RGB color to a single 32-bit integer color 0xBBGGRR
     anno_rgb = imread(fn_anno)
-    print 'anno_rgb shape',anno_rgb.shape
 
 
     #anno_lbl = anno_rgb[:,:,0] + (anno_rgb[:,:,1] << 8) + (anno_rgb[:,:,2] << 16)
@@ -34,8 +33,7 @@ def crf(fn_im,fn_anno,fn_output,colorful_fn_output):
     # Convert the 32bit integer color to 1, 2, ... labels.
     # Note that all-black, i.e. the value 0 for background will stay 0.
     colors, labels = np.unique(anno_lbl, return_inverse=True)
-    print colors
-    print labels
+
 
     # And create a mapping back from the labels to 32bit integer colors.
     # But remove the all-0 black, that won't exist in the MAP!
@@ -116,7 +114,6 @@ def crf(fn_im,fn_anno,fn_output,colorful_fn_output):
 
     # Find out the most probable class for each pixel.
     MAP = np.argmax(Q, axis=0)
-    print "MAP shape",MAP.shape
     # Convert the MAP (labels) back to the corresponding colors and save the image.
     MAP = colorize[MAP,:]
 
@@ -125,9 +122,6 @@ def crf(fn_im,fn_anno,fn_output,colorful_fn_output):
     ###     Convert to greyscale     ###
     ####################################
 
-    #imwrite(fn_output, MAP.reshape(img.shape))
-    #tmp = Image.open(fn_output).convert('L')
-    #tmp.save(fn_output)
 
     crf_img = MAP.reshape(anno_lbl.shape)
     ########change to rgb########
@@ -146,10 +140,7 @@ def crf(fn_im,fn_anno,fn_output,colorful_fn_output):
     g_gt = label.copy()
     b_gt = label.copy()
 
-    # r_truth = truth_img.copy()
-    # g_truth = truth_img.copy()
-    # b_truth = truth_img.copy()
-    
+
     wall = [139,181,248]
     building = [251,209,244]
     sky = [44,230,121]
@@ -320,35 +311,16 @@ def crf(fn_im,fn_anno,fn_output,colorful_fn_output):
     rgb[:,:,0] = r
     rgb[:,:,1] = g
     rgb[:,:,2] = b
-    print 'rgb value', rgb
     rgb_gt = np.zeros((label.shape[0], label.shape[1], 3))
 
     rgb_gt[:,:,0] = r_gt
     rgb_gt[:,:,1] = g_gt
     rgb_gt[:,:,2] = b_gt
-    print 'rgb_gt pass'
-    print 'rgb_gt value', rgb_gt
-    # rgb_truth = np.zeros((truth_img.shape[0], truth_img.shape[1], 3))
-    # rgb_truth[:,:,0] = r_truth
-    # rgb_truth[:,:,1] = g_truth
-    # rgb_truth[:,:,2] = b_truth
 
-
-
-    #image = image/255.0
-
-    #image = np.transpose(image, (1,2,0))
-    #output = np.transpose(output, (1,2,0))
-    #image = image[:,:,(2,1,0)] 
     
     cv2.imwrite(colorful_fn_output,rgb)
 
 
-    #predict_colorful_img = color.gray2rgb(label).astype(np.uint32)
-
-    #cv2.imwrite(predict_colorful,rgb_gt)
-    #cv2.imwrite(truth_colorful,rgb_truth)
-    
 
 
 
@@ -365,12 +337,6 @@ def crf(fn_im,fn_anno,fn_output,colorful_fn_output):
 
 
 
-# if len(sys.argv) != 4:
-#     print("Usage: python {} IMAGE ANNO OUTPUT".format(sys.argv[0]))
-#     print("")
-#     print("IMAGE and ANNO are inputs image folders and OUTPUT is the folder where the result should be written.")
-#     sys.exit(1)
-
 fn_im_folder_path = sys.argv[1]
 fn_anno_folder_path = sys.argv[2]
 fn_output_folder_path = sys.argv[3]
@@ -382,5 +348,5 @@ anno_images =  sorted(glob.glob(fn_anno_folder_path+"/*.png"))
 
 for i in range(len(original_images)):
     print original_images[i]
-    crf(original_images[i],anno_images[i], fn_output_folder_path +"/ADE_val_0000000"+str(i+1)+".png", colorful_fn_output_folder_path +"/_ADE_val_0000000"+str(i+1)+".png")
+    crf(original_images[i],anno_images[i], fn_output_folder_path +"/ADE_val_0000"+str('%04d'%(i+1))+".png", colorful_fn_output_folder_path +"/ADE_val_0000"+str('%04d'%(i+1))+".png")
     
